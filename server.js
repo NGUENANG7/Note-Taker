@@ -12,3 +12,24 @@ app.use(express.json());
 
 // Sets up the Express app to find the public folder
 app.use(express.static('public'));
+
+
+// Sets up the Express app to find the public folder
+app.use(express.static('public'));
+
+// ROUTER
+// The below points our server to a series of "route" files.
+
+// ================================================================================
+
+require("./routes/apiRoute")(app);
+require("./routes/htmlRoute")(app);
+
+
+// LISTENER
+// The below code effectively "starts" our server
+// =============================================================================
+
+app.listen(PORT, function() {
+    console.log("App listening on PORT: " + PORT);
+});
