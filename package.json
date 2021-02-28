@@ -1,31 +1,17 @@
+  
 {
   "name": "note-taker",
   "version": "1.0.0",
-  "description": "An application that can be used to write and save notes.",
+  "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Will Utterback",
-  "license": "MIT",
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
-    "uuid": "^8.3.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wjutterback/Note-Taker.git"
-  },
-  "keywords": [
-    "Note",
-    "Taker"
-  ],
-  "bugs": {
-    "url": "https://github.com/wjutterback/Note-Taker/issues"
-  },
-  "homepage": "https://github.com/wjutterback/Note-Taker#readme",
-  "devDependencies": {
-    "nodemon": "^2.0.7"
+    "express": "^4.16.4",
+    "start-script": "^0.1.0",
+    "uniqid": "^5.2.0"
   }
 }
