@@ -1,17 +1,21 @@
 const express = require("express");
-const apiRoutes = require("./routes/apiRoutes");
-const htmlRoutes = require("./routes/htmlRoutes");
 
-// Initialize the app and create a port
+// Sets an initial port. We"ll use this later in our listener
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
-// Set up body parsing, static, and route middleware
-app.use(express.json());
+// Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
-app.use("/api", apiRoutes);
-app.use("/", htmlRoutes);
+app.use(express.json());
 
-// Start the server on the port
-app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+//this is the starting directory so that the CSS can be accessed
+app.use(express.static("public"));
+
+
+require("./routes/apiRoutes.js")(app);
+require("./routes/htmlRoutes.js")(app);
+
+
+app.listen(PORT, function () {
+    console.log("App listening on PORT: " + PORT);
+});

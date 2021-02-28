@@ -1,25 +1,45 @@
-const router =require("express").Router();
-const notes = require("../db/notes.js");
-
-//Get all notes from DB
-router.get("/notes", function(req, res){
-    notes.getNotes()
-    .then(notes => res.json(notes))
-    .catch(err => res.status(500).json(err));
-})
-
-//Add a notes to the DB
-router.post("/notes", function(req, res){
-    notes.addNotes(req.body)
-    .then(notes => res.json(notes))
-    .catch(err => res.status(500).json(err));
-})
-
-//remove notes by ID
-router.delete("/notes/:id", function(req, res){
-    notes.removeNote(req.params.id)
-    .then(() => res.json({ok: true}))
-    .catch(err => res.status(500).json(err));
-})
-
-module.exports = router;
+// const dbjson = require ("../dbnotes/db.json")
+const fs = require ("fs")
+const { v4:uuidv4 } = require ("uuid");
+uuidv4();
+module.exports = function(app) {
+    app.get("/api/notes", function (req, res) { 
+        fs.readFile("./db/db.json","utf8", (err,data) => {
+            if (err) throw err
+            const allNotes = JSON.parse(data);
+            res.json(allNotes);
+        })
+            // res.send(dbjson)          
+    });
+    app.post("/api/notes", function (req, res) {
+        let noteId = uuidv4()
+        let newNote = {
+            id: noteId,
+            title: req.body.title, 
+            text: req.body.text
+        }
+        fs.readFile("./db/db.json","utf8", (err,data) => {
+            if (err) throw err
+            const allNotes = JSON.parse(data)
+            allNotes.push(newNote)
+        fs.writeFile("./db/db.json",JSON.stringify(allNotes, null, 2), err => {
+            if (err) throw err
+            res.redirect("/")  
+            console.log("Note Created") 
+        });
+        });
+        });
+    app.delete("/api/notes/:id", function (req, res) {
+        let noteId = req.params.id
+        fs.readFile("./db/db.json","utf8", (err,data) => {
+            if (err) throw err
+            const allNotes = JSON.parse(data)
+            const updatedNotes = allNotes.filter(note => note.id!= noteId)
+            fs.writeFile("./db/db.json",JSON.stringify(updatedNotes, null, 2), err => {
+                if (err) throw err
+                res.send(true);
+                console.log("Note Deleted")
+        });
+    });
+});
+}
