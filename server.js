@@ -1,35 +1,13 @@
 const express = require('express');
-const path = require('path');
-
 const app = express();
+const PORT = process.env.PORT || 3030;
+const server = require('http').Server(app);
+const router = require('./routes');
 
-const PORT = process.env.PORT || 8000;
+app.use(express.static('public'));
 
-//Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(router);
 
-
-// Sets up the Express app to find the public folder
-app.use(express.static('public'));
-
-
-// Sets up the Express app to find the public folder
-app.use(express.static('public'));
-
-// ROUTER
-// The below points our server to a series of "route" files.
-
-// ================================================================================
-
-require("./routes/apiRoute")(app);
-require("./routes/htmlRoute")(app);
-
-
-// LISTENER
-// The below code effectively "starts" our server
-// =============================================================================
-
-app.listen(PORT, function() {
-    console.log("App listening on PORT: " + PORT);
-});
+server.listen(PORT, () => {});
