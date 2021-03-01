@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 const router = express.Router();
-const express = require('express');
+const express = require("express");
 
 router.post('/api/notes', (req, res) => {
     const notes = JSON.parse(fs.readFileSync('./db/db.json'));
