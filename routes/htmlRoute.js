@@ -1,17 +1,11 @@
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
 
-    router.get('/', (_req, res) => {
-        res.sendFile(path.join(__dirname, 'public/index.html'));
+module.exports = (app) => {
+    app.get('/notes', (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/notes.html'));
     });
 
-    router.get('/notes', (_req, res) => {
-        res.sendFile(path.join(__dirname, 'public/notes.html'));
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/index.html'));
     });
-
-    router.get('/api/notes', (_req, res) => {
-        const notes = JSON.parse(fs.readFileSync('./db/db.json'));
-        res.json(notes);
-    });
-
-module.exports = router;
+};
