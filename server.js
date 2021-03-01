@@ -3,7 +3,7 @@ const app = express();
 
 const path = require('path');
 
-const PORT = process.env.PORT || 3030;
+const PORT = process.env.PORT || 4500;
 
 
 app.use(express.urlencoded({ extended: true }));
@@ -14,4 +14,4 @@ require("./routes/apiRoute")(app);
 require("./routes/htmlRoute")(app);
 
 app.listen(PORT, () =>
-    console.log(`App listening on PORT: ${PORT}`));
+    console.log(`App listening on PORT ${PORT}`));
