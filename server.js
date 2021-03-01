@@ -4,7 +4,7 @@ const app = express();
 const server = require('http').Server(app);
 
 const PORT = process.env.PORT || 3030;
-
+const router = require('./routes');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
