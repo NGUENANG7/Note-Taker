@@ -1,11 +1,13 @@
-var path = require("path")
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+
 module.exports = function (app) {
-    //need to create notes.html file 
     app.get("/notes", function (req, res) {
-        res.sendFile(path.join(__dirname, "../public/notes.html"));
+        res.sendFile(path.join(__dirname, "public/notes.html"));
     });
-    //need to retrieve index.html file
-    app.get("/", function (req, res) {
-        res.sendFile(path.join(__dirname, "../public/index.html"));
+
+    app.get("*", function (req, res) {
+        res.sendFile(path.join(__dirname, "public/index.html"));
     });
-}
+};
