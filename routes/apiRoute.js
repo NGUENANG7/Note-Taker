@@ -1,36 +1,41 @@
-
-const fs = require('fs');
-const data = fs.readFileSync('./db/db.json');
-let notesData = JSON.parse(data);
+const path = require('path');
+const fs = require('fs')
+const { v4: uuid } = require('uuid');
 
 module.exports = (app) => {
+
     app.get('/api/notes', (req, res) => {
-        res.json(notesData);
+        const dbPath = path.resolve(__dirname, '../../db/db.json')
+        const note = JSON.parse(fs.readFileSync(dbPath))
+        res.json(note)
     });
 
-    function writeToJSONfile() {
-        const noteChanged = JSON.stringify(notesData, null, 2);
-        fs.writeFile('./db/db.json', noteChanged, finished);
-        function finished(err) {
-            console.log('JSON file updated!');
-        }
-    };
-
     app.post('/api/notes', (req, res) => {
-        const newNotes = req.body;
-        notesData.push(req.body);
-        writeToJSONfile();
-        res.json(newNotes);
+        const dbPath = path.resolve(__dirname, '../../db/db.json')
+        const note = JSON.parse(fs.readFileSync(dbPath))
+        req.body['id'] = uuid();
+        note.push(req.body);
+        fs.writeFileSync(dbPath, JSON.stringify(note));
+        console.log('this it is!!', note);
+        res.json(note);
+
     });
 
     app.delete('/api/notes/:id', (req, res) => {
+        console.log('We hit the route');
+        const dbPath = path.resolve(__dirname, '../../db/db.json')
+        const note = JSON.parse(fs.readFileSync(dbPath))
+        console.log('This is note', note);
         const deleteID = req.params.id;
-        for (let i = 0; i < notesData.length; i++) {
-            if (deleteID === notesData[i].id) {
-                notesData.splice(i, 1);
-                writeToJSONfile();
+        const newNote = []
+        for (let i = 0; i < note.length; i++) {
+            if (deleteID !== note[i].id) {
+                newNote.push(note[i])
             }
         }
-        res.end();
+        fs.writeFileSync(dbPath, JSON.stringify(newNote))
+        res.send('deleted')
+
     });
-}
+
+};

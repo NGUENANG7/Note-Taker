@@ -1,17 +1,33 @@
 {
-		"name": "note-taker",
-		"version": "1.0.0",
-		"description": "Express Note App",
-		"main": "server.js",
-		"scripts": {
-				"test": "echo \"Error: no test specified\" && exit 1",
-				"start": "node server.js",
-				"watch": "nodemon server.js"
-		},
-		"author": "",
-		"license": "ISC",
-		"dependencies": {
-				"express": "^4.17.1",
-				"nodemon": "^2.0.7"
-		}
+	"name": "note-taker",
+	"version": "1.0.0",
+	"description": "This application takes and saves notes for the user",
+	"main": "server.js",
+	"scripts": {
+		"test": "echo \\\"Error: no test specified\\\" && exit 1",
+		"start": "node server.js",
+		"watch": "nodemon server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/NGUENANG7/Note-Taker.git"
+	},
+	"keywords": [
+		"notes",
+		"save",
+		"express"
+	],
+	"author": "NGUENANG7",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/NGUENANG7/Note-Taker/issues"
+	},
+	"homepage": "https://github.com/NGUENANG7/Note-Taker#readme",
+	"devDependencies": {
+		"nodemon": "^2.0.4"
+	},
+	"dependencies": {
+		"express": "^4.16.4",
+		"uuid": "^8.3.2"
+	}
 }
