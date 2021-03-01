@@ -1,62 +1,36 @@
+
 const fs = require('fs');
-const path = require('path');
+const data = fs.readFileSync('./db/db.json');
+let notesData = JSON.parse(data);
 
 module.exports = (app) => {
-    const obtainJson = () => {
-        let data = fs.readFileSync(`./db/db.json`, {encoding: `utf-8`});
-        let jsonData = JSON.parse(data);
-        return jsonData;
+    app.get('/api/notes', (req, res) => {
+        res.json(notesData);
+    });
+
+    function writeToJSONfile() {
+        const noteChanged = JSON.stringify(notesData, null, 2);
+        fs.writeFile('./db/db.json', noteChanged, finished);
+        function finished(err) {
+            console.log('JSON file updated!');
+        }
     };
 
-    app.get('/api/notes', (req, res) => {
-        let jsonData = obtainJson();
-        res.json(jsonData);
+    app.post('/api/notes', (req, res) => {
+        const newNotes = req.body;
+        notesData.push(req.body);
+        writeToJSONfile();
+        res.json(newNotes);
     });
 
-    app.post(`/api/notes`, (req, res) => {
-        let note = req.body;
-        let jsonData = obtainJson();
-        let ids = jsonData.map(existingNote => existingNote.id);
-        note.id = jsonData.length + 1;
-        while (ids.includes(note.id)) {
-            note.id += 1;
+    app.delete('/api/notes/:id', (req, res) => {
+        const deleteID = req.params.id;
+        for (let i = 0; i < notesData.length; i++) {
+            if (deleteID === notesData[i].id) {
+                notesData.splice(i, 1);
+                writeToJSONfile();
+            }
         }
-        jsonData.push(note);
-        let stringData = JSON.stringify(jsonData);
-
-        fs.writeFile(`./db/db.json`, stringData, (err) => {
-            if (err) {
-                console.log(err);
-            };
-        });
-
-        res.sendFile(path.join(__dirname, '../public/notes.html'));
+        res.end();
     });
-
-    app.get(`/api/notes/:id`, (req, res) => {
-        let id = parseInt(req.params.id);
-        let jsonData = obtainJson();
-        let apiNote = jsonData.filter(note => note.id === id);
-
-        if (apiNote.length === 0) {
-            res.send(`Note not found!`);
-        } else {
-            res.json(apiNote);
-        };
-    });
-
-    app.delete(`/api/notes/:id`, (req, res) => {
-        let id = parseInt(req.params.id);
-        let jsonData = obtainJson();
-        let newJson = jsonData.filter(note => note.id !== id);
-        let stringData = JSON.stringify(newJson);
-
-        fs.writeFile(`./db/db.json`, stringData, (err) => {
-            if (err) {
-                console.log(err);
-            };
-        });
-        
-        res.sendFile(path.join(__dirname, '../public/notes.html'));
-    });
-};
+}
