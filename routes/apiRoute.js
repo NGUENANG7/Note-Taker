@@ -1,42 +1,28 @@
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
+const router = express.Router();
+const express = require('express');
 
-module.exports = function (app) {
-    app.get("/api/notes", function (req, res) {
-        fs.readFile("db/db.json", "utf8", function (error, data) {
-            res.json(JSON.parse(data));
-        });
-    });
+router.post('/api/notes', (req, res) => {
+    const notes = JSON.parse(fs.readFileSync('./db/db.json'));
+    const noteID = Object.assign(req.body, { id: `${uuidv4()}` });
+    notes.push(noteID);
+    const stringNote = JSON.stringify(notes);
+    fs.writeFileSync('./db/db.json', stringNote);
+    res.json(notes);
+});
 
-    app.post("/api/notes", function (req, res) {
-        var newNote = req.body;
-        newNote.id = uuidv4();
-        fs.readFile("db/db.json", "utf8", function (error, data) {
-            var data = JSON.parse(data);
-            data.push(newNote);
-            fs.writeFile("db/db.json", JSON.stringify(data), function (error) {
-                if (error) throw error;
-                console.log("Written Successfully");
-            });
-        });
-        res.json(newNote);
-    });
+router.delete('/api/notes/:id', (req, res) => {
+    const notes = JSON.parse(fs.readFileSync('./db/db.json'));
+    const noteID = req.params.id;
+    for (let i = 0; i < notes.length; i++) {
+        if (notes[i].id === noteID) {
+            notes.splice(i, 1);
+            const newNotes = JSON.stringify(notes);
+            fs.writeFileSync('./db/db.json', newNotes);
+            return res.json(notes);
+        }
+    }
+});
 
-    app.delete("/api/notes/:id", function (req, res) {
-        fs.readFile("db/db.json", "utf8", function (error, data) {
-            let noteId = req.params.id;
-            let noteData = JSON.parse(data);
-            noteData = noteData.filter(function (note) {
-                if (noteId != note.id) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-            fs.writeFile("db/db.json", JSON.stringify(noteData), function (error) {
-                if (error) throw error;
-                res.end(console.log("Deleted Successfully"));
-            });
-        });
-    });
-};
+module.exports = router;
